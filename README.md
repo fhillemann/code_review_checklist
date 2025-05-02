@@ -30,7 +30,7 @@ Reporting, Running, Reproducibility, Reliability, Robustness, Readability, and R
 
 ---
 
-### Requirements:
+### Requirements
 
 This app was developed and tested on the following versions; other versions may work, but these were used during development:
 
@@ -44,6 +44,14 @@ Required R packages, tested versions:
 - `shinythemes`: `1.2.0`
 
 The script checks for these packages and installs them if missing.
+
+---
+
+### Preview
+
+Here's a screenshot of the app's user interface:
+
+![Code Review App Preview](checklist_app_ui_screenshot.png)
 
 ---
 
