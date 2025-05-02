@@ -30,6 +30,23 @@ Reporting, Running, Reproducibility, Reliability, Robustness, Readability, and R
 
 ---
 
+### Requirements:
+
+This app was developed and tested on the following versions; other versions may work, but these were used during development:
+
+- macOS 15.4.1  
+- R version 4.4.3  
+
+Required R packages, tested versions:
+
+- `shiny`: `1.10.0`  
+- `shinyjs`: `2.1.0`  
+- `shinythemes`: `1.2.0`
+
+The script checks for these packages and installs them if missing.
+
+---
+
 ### License and Attribution
 
 This checklist and the app are shared under a [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), allowing reuse and adaptation for non-commercial purposes, provided attribution is given. If you use, build on, or adapt this app, please attribute as follows:
