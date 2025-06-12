@@ -13,9 +13,12 @@
 # 2. To start the app, either:
 #    a) Run the whole script in its entirety, or
 #    b) In the Console, run these two lines:
-#       setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only works in RStudio, alternatively use the following:
-#       # setwd("path/to/your/appfolder")  # Provide path to directory where app.R is saved!
-#       shiny::runApp()
+#       If using RStudio and app.R is open:
+#         setwd(dirname(rstudioapi::getActiveDocumentContext()$path))  # sets working directory to app.R location (RStudio only!)
+#         shiny::runApp()  # runs the app
+#       Or, alternatively, set working directory manually:
+#         setwd("path/to/your/appfolder")  # replace with the folder path where app.R is saved
+#         shiny::runApp()  # runs the app
 # 3. Once the app opens in your browser:
 #    - fill in the metadata section at the top
 #    - work through the checklist and add comments if needed
@@ -157,13 +160,13 @@ r_principles <- list(
     description = "Code should handle invalid inputs gracefully and fail safely, providing meaningful feedback. It should avoid brittle design and support flexible workflows.",
     subquestions = list(
       "Parameterisation & Portability",
-      "Streamlined Design",
+      "Efficiency",
       "Functional Programming Principles",
       "Warnings & Error Handling"
     ),
     subq_descriptions = list(
       "Does the code avoid hard-coding and instead use flexible and  generalisable solutions, e.g., relative file paths or transferable parameters?",
-      "Does the code include only relevant parts, reducing clutter and minimising the risk of confusion or errors?",
+      "Does the code include only relevant parts in a streamlined design—reducing clutter, minimising the risk of confusion or errors, and improving speed by avoiding redundant execution?",
       "Does the code use modular components to support structural resilience and debugging, e.g., using tidyverse functions and pipelines to process data in R?",
       "Does the code provide clear comments, warnings, or error messages to flag potential issues, e.g. related to data quality or input constraints?"
     )
