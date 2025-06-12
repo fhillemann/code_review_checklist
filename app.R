@@ -13,13 +13,25 @@
 # 2. To start the app, either:
 #    a) Run the whole script in its entirety, or
 #    b) In the Console, run these two lines:
-#       setwd("path/to/your/appfolder")  # Provide path to directory where app.R is saved!
+#       setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # only works in RStudio, alternatively use the following:
+#       # setwd("path/to/your/appfolder")  # Provide path to directory where app.R is saved!
 #       shiny::runApp()
 # 3. Once the app opens in your browser:
 #    - fill in the metadata section at the top
 #    - work through the checklist and add comments if needed
 #    - click 'save report as .md' to download your review as a Markdown file
 # 4. You can then edit, save, and share the report as you like
+#
+#
+# REQUIREMENTS:
+# This app was developed and tested on the following versions; other versions may work, but these were used during development:
+#   - MacOS 15.4.1
+#   - R version 4.4.3
+# Required R packages, tested versions:
+#   - shiny: 1.10.0
+#   - shinyjs: 2.1.0
+#   - shinythemes: 1.2.0
+# The script checks for these packages and installs them if missing.
 #
 #
 # LICENSE:
@@ -100,7 +112,7 @@ r_principles <- list(
     ),
     subq_descriptions = list(
       "Does the code run without errors from start to finish?",
-      "Does the code specify all required libraries/packages or is set to install automatically?",
+      "Does the code specify all required libraries/packages or install them automatically (e.g., via groundhog::groundhog.library() or renv::restore() in R)?",
       "Does the code run on a different operating system than the one it was developed on?",
       "Does the code provide information on run time to manage user expectations?",
       "Did you run the entire code?"
@@ -110,7 +122,7 @@ r_principles <- list(
   # Reproducibility -------------------------------#
   list(
     title = "Reproducibility — Check that it gives consistent results.",
-    description = "Code should produce the same results when run with the same input—ideally, results that match expected or claimed outputs.",
+    description = "Code should produce the same output when run with the same input data and computational conditions (including a random seed for stochastic processes like simulations or MCMC).",
     subquestions = list(
       "Numerical Reproducibility",
       "Visual Reproducibility",
@@ -118,7 +130,7 @@ r_principles <- list(
       "Compartmentalisation"
     ),
     subq_descriptions = list(
-      "Does the code generate the same functional outputs, i.e., statistical or simulation results, when provided with identical data and parameters?",
+      "Does the code generate the same functional outputs (e.g., descriptive statistics, model estimates, or predictions) with identical input?",
       "Does the code generate consistent visual outputs (e.g., figures, maps) across repeated executions with the same input?",
       "Does the code include or clearly specify all necessary data, or provide mock data where applicable, to enable independent reproduction?",
       "Does the code ensure the workflow is self-contained, with all external software dependencies documented and accessible for execution in other environments?"
@@ -127,38 +139,37 @@ r_principles <- list(
 
   # Reliability -----------------------------------#
   list(
-    title = "Reliability — Check that it is built to minimise potential errors.",
+    title = "Reliability — Check that it behaves as expected under known conditions.",
     description = "Code should perform as intended under typical use cases, producing expected results and including internal checks for common issues to catch errors early.",
     subquestions = list(
-      "Expected Results",
-      "Validation & Internal Checks",
-      "Warning & Error Handling"
+      "Input Validation",
+      "Stepwise Output Checks"
     ),
     subq_descriptions = list(
-      "Does the code produce the correct type of output for each step, e.g., correct data transformations or statistical results?",
-      "Does the code include safeguards such as assertions, unit tests, or manual checks to verify that key steps are performed as intended?",
-      "Does the code anticipate limitations related to data quality or input constraints and provide comments, warnings, or error messages?"
+      "Does the code check data formats or value ranges of external inputs or other internal assumptions, e.g., confirming no negative values where only positives are expected?",
+      "Does the code verify that key transformations or computations perform as intended, e.g., checking factor levels are preserved after merging?"
     )
   ),
 
   # Robustness ------------------------------------#
   list(
-    title = "Robustness — Check that it handles the unexpected.",
+    title = "Robustness — Check that it remains functional under change and handles unexpected inputs gracefully.",
     description = "Code should handle invalid inputs gracefully and fail safely, providing meaningful feedback. It should avoid brittle design and support flexible workflows.",
     subquestions = list(
-      "Feedback",
-      "Parameterisation",
-      "Efficiency",
-      "Functional Programming Principles"
+      "Parameterisation & Portability",
+      "Streamlined Design",
+      "Functional Programming Principles",
+      "Warnings & Error Handling"
     ),
     subq_descriptions = list(
-      "Does the code provide clear, interpretable comments/messages on potential issues?",
-      "Does the code avoid hard-coding? For instance, does it use relative file paths instead of absolute ones?",
-      "Does the code efficiently avoid redundancy and include only what is necessary?",
-      "Does the code minimise global state changes using functions and pipelines (e.g., R tidyverse packages)?"
+      "Does the code avoid hard-coding and instead use flexible and  generalisable solutions, e.g., relative file paths or transferable parameters?",
+      "Does the code include only relevant parts, reducing clutter and minimising the risk of confusion or errors?",
+      "Does the code use modular components to support structural resilience and debugging, e.g., using tidyverse functions and pipelines to process data in R?",
+      "Does the code provide clear comments, warnings, or error messages to flag potential issues, e.g. related to data quality or input constraints?"
     )
   ),
     
+  
   # Readability -----------------------------------#
   list(
     title = "Readability — Check that it is clear and clean.",
@@ -170,8 +181,8 @@ r_principles <- list(
       "Style Conventions"
     ),
     subq_descriptions = list(
-      "Does the code follow a logical order, guiding users through the workflow and clearly conveying its function?",
-      "Does the code consist of manageable, logical sections (e.g., functions, sections, modular scripts) that together form a coherent workflow?",
+      "Does the code follow a logical order that clearly conveys its purpose and guides users through the workflow?",
+      "Does the code consist of manageable sections for different tasks (e.g., functions, sections, modular scripts) that together form a coherent workflow?",
       "Does the code use informative names for variables, functions, and objects?",
       "Does the code consistently follow a style guide, such as tidyverse style for R?"
     )
@@ -187,8 +198,8 @@ r_principles <- list(
       "Attribution"
     ),
     subq_descriptions = list(
-      "Do the authors or maintainers provide guidance on how to report feedback or obtain support?",
-      "Does the code include a licence specifying how it can be used, modified, shared?	",
+      "Do the authors or maintainers provide guidance on how to report feedback or seek support?",
+      "Does the code include a licence specifying how it can be used, modified, and shared?",
       "Does the code have a Persistent Identifier (e.g., Digital Object Identifier DOI), making it easy to cite and give proper credit in academic and research contexts?"
     )
   )
@@ -334,7 +345,7 @@ ui <- fluidPage(
   fluidRow(
     column(6, # left column
            h4("Review Metadata"),
-           textInput("code_id", "Review of", placeholder = "e.g. Unicorn population dynamics v1 05/2025 "),
+           textInput("code_id", "Review of", placeholder = "e.g. Unicorn population dynamics v1 05/2025"),
            textInput("review_env", "Operating system and software version used", placeholder = "e.g. macOS 13.2, R 4.3.0")
     ),
     
